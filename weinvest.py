@@ -78,6 +78,22 @@ def word_to_number(word, dial_pad_mapper):
     return int(''.join([lstr(dial_pad_mapper.get(char, 0)) for char in list(word)]))
 
 
+def strip_whitespace_punctuation(word):
+    '''
+    Strip all whitespace and punctuation. Don't replace '.'
+
+    http://stackoverflow.com/a/266162
+    http://stackoverflow.com/a/3739928
+    '''
+    punctuation_regex = re.compile('[%s]' % re.escape(string.punctuation.replace('.', '')))
+    whitespace_regex  = re.compile(r'\s+')
+
+    word = punctuation_regex.sub('', word)
+    word = whitespace_regex.sub('', word)
+
+    return word
+
+
 def generate_dictionary(file):
     '''
     Return a dictionary with keypad sequence for the word as the key and the list of words as the value
@@ -94,17 +110,20 @@ def generate_dictionary(file):
     dial_pad_mapper['z'] = 9
 
     dictionary = defaultdict(list)
+
     with open(file) as f:
         for word in f:
             word = word.strip().lower()
-            if len(word) > 1:
-                number = word_to_number(word, dial_pad_mapper)
-                dictionary[number].append(word)
+            word = strip_whitespace_punctuation(word)
+            number = word_to_number(word, dial_pad_mapper)
+            dictionary[number].append(word)
     return dictionary
 
 def process_input(file, dictionary, is_file=True):
+
     for line in file:
         line = line.strip()
+        line = strip_whitespace_punctuation(line)
         seqs = find_all_sequences(line, dictionary)
         if seqs:
             print(seqs)
