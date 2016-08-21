@@ -85,8 +85,9 @@ def strip_whitespace_punctuation(word):
     http://stackoverflow.com/a/266162
     http://stackoverflow.com/a/3739928
     '''
-    punctuation_regex = re.compile('[%s]' % re.escape(string.punctuation.replace('.', '')))
-    whitespace_regex  = re.compile(r'\s+')
+    punctuation_regex = re.compile(
+        '[%s]' % re.escape(string.punctuation.replace('.', '')))
+    whitespace_regex = re.compile(r'\s+')
 
     word = punctuation_regex.sub('', word)
     word = whitespace_regex.sub('', word)
@@ -119,6 +120,7 @@ def generate_dictionary(file):
             dictionary[number].append(word)
     return dictionary
 
+
 def process_input(file, dictionary, is_file=True):
 
     for line in file:
@@ -135,12 +137,14 @@ if __name__ == "__main__":
     import argparse
     import sys
 
-    parser = argparse.ArgumentParser(description='Return the word-sequences for the given input.')
+    parser = argparse.ArgumentParser(
+        description='Return the word-sequences for the given input.')
     parser.add_argument('files', metavar='File', nargs='*')
-    parser.add_argument('-d', '--dictionary', help='Specify the dictionary file', action='store', dest='dictionary_file')
+    parser.add_argument('-d', '--dictionary', help='Specify the dictionary file',
+                        action='store', dest='dictionary_file')
 
     args = parser.parse_args()
-    
+
     if len(sys.argv) == 1:
         parser.print_help()
         exit()
